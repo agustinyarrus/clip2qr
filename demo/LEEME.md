@@ -22,7 +22,7 @@ cabecera. Es lo que hace cualquier terminal de ese tamaño.
 | `demo.tape` | el guion de [VHS](https://github.com/charmbracelet/vhs): prepara la escena fuera de cámara, graba y la desarma |
 | `preparar.ps1` | compila clip2qr de este repo a `.escena\bin` (o la borra con `-Limpiar`) |
 | `demo.gif` · `demo.webm` | la grabación: 8,6 s a 25 cuadros por segundo, 1078×644, 96 KB y 68 KB |
-| `demo.png` | el último cuadro, el QR con la tarjeta (para quien pide menos movimiento) |
+| `demo.png` | el último cuadro, el QR con la tarjeta, en paleta como el GIF (para quien pide menos movimiento; también se lee con zxing-cpp) |
 
 ## Regrabar con VHS
 
@@ -46,7 +46,7 @@ Chromium. Después, desde esta carpeta:
 ```powershell
 Remove-Item Env:NO_COLOR -ErrorAction SilentlyContinue     # si tu entorno lo define, la demo sale sin color
 vhs demo.tape                                             # demo.gif y demo.webm
-ffmpeg -y -sseof -0.5 -i demo.gif -frames:v 1 demo.png    # el cuadro fijo
+ffmpeg -y -sseof -0.5 -i demo.gif -frames:v 1 -vf "split[a][b];[a]palettegen[p];[b][p]paletteuse=dither=none" demo.png
 ```
 
 Tarda unos 20 segundos. Mirá siempre el resultado antes de publicarlo: cuadros sueltos con
