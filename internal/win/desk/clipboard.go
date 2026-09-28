@@ -1,6 +1,6 @@
 //go:build windows
 
-package win
+package desk
 
 // clipboard.go lee y escribe texto del portapapeles de Windows por la API
 // nativa (CF_UNICODETEXT), sin dependencias. Reintenta abrir el portapapeles

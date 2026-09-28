@@ -17,7 +17,7 @@ import (
 	"github.com/agustinyarrus/clip2qr/internal/fsx"
 	"github.com/agustinyarrus/clip2qr/internal/qr"
 	"github.com/agustinyarrus/clip2qr/internal/tui"
-	"github.com/agustinyarrus/clip2qr/internal/win"
+	"github.com/agustinyarrus/clip2qr/internal/win/desk"
 )
 
 type opciones struct {
@@ -108,7 +108,7 @@ func leerTexto(o opciones, pos []string) (texto, fuente string, err error) {
 	case len(pos) > 0:
 		return strings.Join(pos, " "), "argumento", nil
 	default:
-		txt, err := win.ClipboardText()
+		txt, err := desk.ClipboardText()
 		if err != nil {
 			return "", "portapapeles", err
 		}
