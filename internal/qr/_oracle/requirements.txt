@@ -1,0 +1,6 @@
+# Lo que necesitan los oráculos de clip2qr (decode.py y terminal_check.py),
+# con las versiones con que se verificaron. zxing-cpp es el decodificador
+# independiente contra el que se compara el codificador.
+#   python -m pip install -r internal/qr/_oracle/requirements.txt
+pillow==12.3.0
+zxing-cpp==3.1.1
