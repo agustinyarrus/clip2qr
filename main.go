@@ -1,3 +1,5 @@
+//go:build windows
+
 // clip2qr dibuja un código QR del portapapeles (o de un texto) en la terminal.
 package main
 
