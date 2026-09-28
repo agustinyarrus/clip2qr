@@ -63,6 +63,7 @@
 - Paleta pastel sobre negro, cabecera, tarjeta de resumen (fondo apenas teñido, sin bordes) y formato es-AR (miles con punto, decimales con coma).
 - El ancho de la ventana (lo usa el centrado del QR): sin consola vale `COLUMNS` o, si no está, 100 columnas; nunca más de 180.
 - Sin consola, o con `--no-color` o `NO_COLOR`, ningún escape de color.
+- **Renglones que no entran**: los errores (`✗`) se parten en palabras al ancho de la ventana, con las líneas de más alineadas después de la marca (`Term.Marked`); a un pipe van enteros. Antes la consola los cortaba donde caían.
 - También trae la región de progreso vivo y las tablas que ceden ancho, que clip2qr no usa.
 
 ### cli

@@ -72,7 +72,12 @@ llega a capturar cada cuadro a tiempo y el video sale acelerado.
 
 ## Sin VHS
 
-La misma sesión se puede grabar a mano: una terminal de 100×30 con fondo `#0b0b0f` y Cascadia Mono
-(`wt --size 100,30 pwsh -NoProfile`), `.\preparar.ps1` para compilar, el comando de arriba y un
-grabador de pantalla como [ScreenToGif](https://www.screentogif.com). Al terminar,
-`.\preparar.ps1 -Limpiar`.
+La misma sesión se puede grabar a mano, con un grabador de pantalla como
+[ScreenToGif](https://www.screentogif.com) sobre una terminal de 100×30 con fondo `#0b0b0f` y
+Cascadia Mono (`wt --size 100,30 pwsh -NoProfile`). Desde esta carpeta:
+
+```powershell
+$env:Path = (.\preparar.ps1) + ";$env:Path"      # compila clip2qr y lo pone primero en el PATH
+clip2qr --text "https://github.com/agustinyarrus/clip2qr"
+.\preparar.ps1 -Limpiar
+```

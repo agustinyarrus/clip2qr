@@ -1,6 +1,6 @@
 # clip2qr 1.0.0
 
-La primera versión de clip2qr como proyecto propio. Antes vivía en navaja, la suite de herramientas de consola para Windows; el código es el que se probó ahí, con pruebas nuevas en el borde de arriba de la norma (los límites de la versión 40, por modo y por nivel) y la cabecera con la versión con su `v`. Ahora tiene su repo, su número de versión, su CI y su demo.
+La primera versión de clip2qr como proyecto propio. Antes vivía en navaja, la suite de herramientas de consola para Windows; el código es el que se probó ahí, con pruebas nuevas en el borde de arriba de la norma (los límites de la versión 40, por modo y por nivel), la cabecera con la versión con su `v` y los errores que no entran en la ventana partidos en palabras. Ahora tiene su repo, su número de versión, su CI y su demo.
 
 clip2qr es para pasar algo de la PC al teléfono sin mandarte un mensaje a vos mismo: copiás una URL, una clave de Wi-Fi o un texto, corrés `clip2qr` y lo escaneás con la cámara directo de la terminal.
 
@@ -35,7 +35,7 @@ En Git Bash o WSL, `sha256sum -c SHA256SUMS`. El `.exe` es reproducible: la mism
 ## Cómo se verificó
 
 - clip2qr no se contrasta consigo misma: zxing-cpp, un decodificador independiente, lee 72 de 72 códigos del codificador (15 textos por 4 niveles, con tildes, hebreo y japonés, y los 12 textos más largos que entran en la versión 40) y 15 de 15 dibujos que clip2qr imprime en la terminal, reconstruidos desde los medios bloques: lo que de verdad escanea el teléfono.
-- 57 pruebas de Go, entre ellas el vector de Reed–Solomon que fija el orden del polinomio generador (ese orden fue el bug que al principio impedía leer cualquier código) y los límites de la versión 40.
+- 58 pruebas de Go, entre ellas el vector de Reed–Solomon que fija el orden del polinomio generador (ese orden fue el bug que al principio impedía leer cualquier código) y los límites de la versión 40.
 - CI en `windows-latest` con el Go mínimo del `go.mod`: formato, `go vet` (también para Linux), todas las pruebas, los dos oráculos de zxing-cpp y el `.exe` con su versión y su SHA256.
 
 El detalle, en [docs/VERIFICACION.md](https://github.com/agustinyarrus/clip2qr/blob/v1.0.0/docs/VERIFICACION.md); la arquitectura y el codificador paso a paso, en [docs/ARQUITECTURA.md](https://github.com/agustinyarrus/clip2qr/blob/v1.0.0/docs/ARQUITECTURA.md).

@@ -15,5 +15,5 @@ clip2qr está terminada y verificada ([VERIFICACION.md](VERIFICACION.md)). Lo qu
 
 ## Distribución
 
-- Releases en GitHub con el `clip2qr.exe` que genera `build.ps1` y su SHA256.
-- Integración continua: `go vet` y `go test` en `windows-latest` con GitHub Actions, y los dos oráculos de zxing-cpp (no necesitan nada de la máquina).
+- Hecho: la CI ([`ci.yml`](../.github/workflows/ci.yml)) corre en cada push las pruebas y los dos oráculos de zxing-cpp; la release 1.0.0 está lista para publicar ([RELEASE.md](RELEASE.md)).
+- Falta: publicarla, y ver la primera corrida de la CI en GitHub (se simuló en la PC, no corrió en un runner de verdad).
