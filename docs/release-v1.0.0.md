@@ -36,7 +36,7 @@ En Git Bash o WSL, `sha256sum -c SHA256SUMS`. El `.exe` es reproducible: la mism
 
 - clip2qr no se contrasta consigo misma: zxing-cpp, un decodificador independiente, lee 72 de 72 códigos del codificador (15 textos por 4 niveles, con tildes, hebreo y japonés, y los 12 textos más largos que entran en la versión 40) y 15 de 15 dibujos que clip2qr imprime en la terminal, reconstruidos desde los medios bloques: lo que de verdad escanea el teléfono.
 - 58 pruebas de Go, entre ellas el vector de Reed–Solomon que fija el orden del polinomio generador (ese orden fue el bug que al principio impedía leer cualquier código) y los límites de la versión 40.
-- CI en `windows-latest` con el Go mínimo del `go.mod`: formato, `go vet` (también para Linux), todas las pruebas, los dos oráculos de zxing-cpp y el `.exe` con su versión y su SHA256.
+- CI configurada para `windows-latest` con el Go mínimo del `go.mod`: formato, `go vet` (también para Linux), todas las pruebas, los dos oráculos de zxing-cpp y el `.exe` con su versión y su SHA256. Esta versión se verificó con la misma secuencia en un clon limpio, antes de publicarla.
 
 El detalle, en [docs/VERIFICACION.md](https://github.com/agustinyarrus/clip2qr/blob/v1.0.0/docs/VERIFICACION.md); la arquitectura y el codificador paso a paso, en [docs/ARQUITECTURA.md](https://github.com/agustinyarrus/clip2qr/blob/v1.0.0/docs/ARQUITECTURA.md).
 
