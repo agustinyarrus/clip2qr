@@ -30,12 +30,13 @@ type opciones struct {
 	stdin    bool
 }
 
-// Main es el punto de entrada del subcomando.
+// Main es el punto de entrada de clip2qr: interpreta args, hace el trabajo y
+// devuelve el código de salida.
 func Main(t *tui.Term, version string, args []string) int {
 	o := opciones{nivel: "m", quiet: 2, escala: 8}
 	app := cli.New("clip2qr", version, "convierte el portapapeles en un QR en la terminal")
 	app.Usage = []string{
-		"clip2qr                 QR de lo que haya en el portapapeles",
+		"clip2qr                  QR de lo que haya en el portapapeles",
 		"clip2qr \"texto o URL\"    QR de un texto puntual",
 		"echo hola | clip2qr -    QR de la entrada estándar",
 	}

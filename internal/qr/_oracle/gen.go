@@ -64,6 +64,34 @@ func main() {
 			idx++
 		}
 	}
+	// El borde de arriba: el texto más largo que entra en la versión 40, por
+	// modo y por nivel (tabla 7 de ISO/IEC 18004). Si zxing los lee, las tablas
+	// de bloques de la 40 y el indicador de cuenta largo están bien.
+	limites := []struct {
+		letra      string
+		l, m, q, h int
+	}{
+		{"7", 7089, 5596, 3993, 3057}, // numérico
+		{"K", 4296, 3391, 2420, 1852}, // alfanumérico
+		{"k", 2953, 2331, 1663, 1273}, // byte
+	}
+	for _, lim := range limites {
+		for i, n := range []int{lim.l, lim.m, lim.q, lim.h} {
+			texto := strings.Repeat(lim.letra, n)
+			m, err := qr.Encode([]byte(texto), qr.Options{Level: niveles[i], Mask: -1})
+			if err != nil {
+				fmt.Fprintf(os.Stderr, "encode falló (%d × %q, %s): %v\n", n, lim.letra, niveles[i], err)
+				continue
+			}
+			name := fmt.Sprintf("qr_%03d.png", idx)
+			f, _ := os.Create(filepath.Join(out, name))
+			png.Encode(f, m.Image(6, 4))
+			f.Close()
+			manifest = append(manifest, entry{name, texto, niveles[i].String(), m.Version, m.Mask})
+			idx++
+		}
+	}
+
 	mf, _ := os.Create(filepath.Join(out, "manifest.json"))
 	json.NewEncoder(mf).Encode(manifest)
 	mf.Close()

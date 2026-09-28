@@ -15,7 +15,7 @@ import (
 	"github.com/agustinyarrus/clip2qr/internal/tui"
 )
 
-// Códigos de salida comunes a toda la suite.
+// Códigos de salida.
 const (
 	ExitOK          = 0   // todo salió bien
 	ExitPartial     = 1   // algunos elementos fallaron

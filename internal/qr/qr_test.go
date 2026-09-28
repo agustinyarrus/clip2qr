@@ -116,3 +116,39 @@ func TestModuloOscuro(t *testing.T) {
 		t.Error("falta el módulo oscuro obligatorio en (8, size-8)")
 	}
 }
+
+// TestCapacidadVersion40: los límites de la versión 40 que publica la tabla 7
+// de ISO/IEC 18004, por modo y nivel. El texto más largo que entra da un QR
+// versión 40, y un carácter más da error: así se prueban juntas las tablas de
+// capacidad, el largo del indicador de cuenta y la elección de versión en el
+// borde de arriba.
+func TestCapacidadVersion40(t *testing.T) {
+	casos := []struct {
+		modo       string
+		letra      byte
+		l, m, q, h int
+	}{
+		{"numérico", '7', 7089, 5596, 3993, 3057},
+		{"alfanumérico", 'K', 4296, 3391, 2420, 1852},
+		{"byte", 'k', 2953, 2331, 1663, 1273},
+	}
+	for _, c := range casos {
+		for _, n := range []struct {
+			lvl Level
+			max int
+		}{{L, c.l}, {M, c.m}, {Q, c.q}, {H, c.h}} {
+			dato := bytes.Repeat([]byte{c.letra}, n.max)
+			m, err := Encode(dato, Options{Level: n.lvl, Mask: -1})
+			if err != nil {
+				t.Errorf("%s %s: %d caracteres tienen que entrar: %v", c.modo, n.lvl, n.max, err)
+				continue
+			}
+			if m.Version != 40 {
+				t.Errorf("%s %s: %d caracteres dan la versión %d, esperaba 40", c.modo, n.lvl, n.max, m.Version)
+			}
+			if _, err := Encode(append(dato, c.letra), Options{Level: n.lvl, Mask: -1}); err == nil {
+				t.Errorf("%s %s: %d caracteres no entran en ningún QR y no dio error", c.modo, n.lvl, n.max+1)
+			}
+		}
+	}
+}
