@@ -15,6 +15,7 @@ import (
 
 	"github.com/agustinyarrus/clip2qr/internal/cli"
 	"github.com/agustinyarrus/clip2qr/internal/fsx"
+	"github.com/agustinyarrus/clip2qr/internal/i18n"
 	"github.com/agustinyarrus/clip2qr/internal/qr"
 	"github.com/agustinyarrus/clip2qr/internal/tui"
 	"github.com/agustinyarrus/clip2qr/internal/win/desk"
@@ -33,31 +34,32 @@ type opciones struct {
 // Main es el punto de entrada de clip2qr: interpreta args, hace el trabajo y
 // devuelve el código de salida.
 func Main(t *tui.Term, version string, args []string) int {
+	cli.ResolveLang("clip2qr", args) // el idioma, antes de escribir una sola palabra
 	o := opciones{nivel: "m", quiet: 2, escala: 8}
-	app := cli.New("clip2qr", version, "convierte el portapapeles en un QR en la terminal")
+	app := cli.New("clip2qr", version, i18n.T("convierte el portapapeles en un QR en la terminal"))
 	app.Usage = []string{
-		"clip2qr                  QR de lo que haya en el portapapeles",
-		"clip2qr \"texto o URL\"    QR de un texto puntual",
-		"echo hola | clip2qr -    QR de la entrada estándar",
+		i18n.T("clip2qr                  QR de lo que haya en el portapapeles"),
+		i18n.T("clip2qr \"texto o URL\"    QR de un texto puntual"),
+		i18n.T("echo hola | clip2qr -    QR de la entrada estándar"),
 	}
-	app.Section("contenido")
-	app.String(&o.textoArg, "text", 0, "TEXTO", "usar este texto en vez del portapapeles")
-	app.Bool(&o.stdin, "stdin", 0, "leer el texto de la entrada estándar")
-	app.Section("código")
-	app.Enum(&o.nivel, "level", 'e', "corrección de errores (más alto = más robusto y más denso)", "l", "m", "q", "h")
-	app.Int(&o.quiet, "quiet", 'q', "N", "módulos de borde claro alrededor", 0, 10)
-	app.Bool(&o.invertir, "invert", 'i', "invertir claro/oscuro (para terminales de fondo claro)")
-	app.Section("guardar")
-	app.String(&o.png, "png", 'o', "ARCHIVO", "además, guardar el QR como PNG")
-	app.Int(&o.escala, "scale", 's', "N", "píxeles por módulo en el PNG", 1, 64)
+	app.Section(i18n.T("contenido"))
+	app.String(&o.textoArg, "text", 0, i18n.T("TEXTO"), i18n.T("usar este texto en vez del portapapeles"))
+	app.Bool(&o.stdin, "stdin", 0, i18n.T("leer el texto de la entrada estándar"))
+	app.Section(i18n.T("código"))
+	app.Enum(&o.nivel, "level", 'e', i18n.T("corrección de errores (más alto = más robusto y más denso)"), "l", "m", "q", "h")
+	app.Int(&o.quiet, "quiet", 'q', "N", i18n.T("módulos de borde claro alrededor"), 0, 10)
+	app.Bool(&o.invertir, "invert", 'i', i18n.T("invertir claro/oscuro (para terminales de fondo claro)"))
+	app.Section(i18n.T("guardar"))
+	app.String(&o.png, "png", 'o', i18n.T("ARCHIVO"), i18n.T("además, guardar el QR como PNG"))
+	app.Int(&o.escala, "scale", 's', "N", i18n.T("píxeles por módulo en el PNG"), 1, 64)
 	app.Examples = []cli.Example{
-		{Cmd: "clip2qr", Desc: "el caso típico: copiás una URL y la escaneás con el teléfono"},
-		{Cmd: "clip2qr -e h -o wifi.png", Desc: "QR robusto y guardado como imagen"},
-		{Cmd: "clip2qr --text \"https://…\"", Desc: "sin tocar el portapapeles"},
+		{Cmd: "clip2qr", Desc: i18n.T("el caso típico: copiás una URL y la escaneás con el teléfono")},
+		{Cmd: "clip2qr -e h -o wifi.png", Desc: i18n.T("QR robusto y guardado como imagen")},
+		{Cmd: "clip2qr --text \"https://…\"", Desc: i18n.T("sin tocar el portapapeles")},
 	}
 	app.Notes = []string{
-		"Todo local: el texto no sale de la máquina.",
-		"El QR se dibuja con medios bloques para que quede cuadrado; si tu terminal no los muestra bien, guardá el PNG.",
+		i18n.T("Todo local: el texto no sale de la máquina."),
+		i18n.T("El QR se dibuja con medios bloques para que quede cuadrado; si tu terminal no los muestra bien, guardá el PNG."),
 	}
 
 	pos, done, code := app.Start(t, args)
@@ -70,7 +72,7 @@ func Main(t *tui.Term, version string, args []string) int {
 		return fallo(t, err)
 	}
 	if strings.TrimSpace(texto) == "" {
-		return fallo(t, fmt.Errorf("no hay texto para codificar (%s)", fuente))
+		return fallo(t, i18n.Errorf("no hay texto para codificar (%s)", fuente))
 	}
 
 	nivel, _ := qr.ParseLevel(o.nivel)
@@ -79,7 +81,7 @@ func Main(t *tui.Term, version string, args []string) int {
 		return fallo(t, err)
 	}
 
-	t.Lines(t.Header("clip2qr", "convierte el portapapeles en un QR", version))
+	t.Lines(t.Header("clip2qr", i18n.T("convierte el portapapeles en un QR"), version))
 	dibujar(t, m, o.quiet, o.invertir)
 
 	guardado := ""
@@ -99,21 +101,21 @@ func Main(t *tui.Term, version string, args []string) int {
 func leerTexto(o opciones, pos []string) (texto, fuente string, err error) {
 	switch {
 	case o.textoArg != "":
-		return o.textoArg, "argumento --text", nil
+		return o.textoArg, i18n.T("argumento --text"), nil
 	case o.stdin || (len(pos) == 1 && pos[0] == "-"):
 		b, err := io.ReadAll(os.Stdin)
 		if err != nil {
-			return "", "", fmt.Errorf("no pude leer la entrada estándar: %w", err)
+			return "", "", i18n.Errorf("no pude leer la entrada estándar: %w", err)
 		}
-		return strings.TrimRight(string(b), "\r\n"), "entrada estándar", nil
+		return strings.TrimRight(string(b), "\r\n"), i18n.T("entrada estándar"), nil
 	case len(pos) > 0:
-		return strings.Join(pos, " "), "argumento", nil
+		return strings.Join(pos, " "), i18n.T("argumento"), nil
 	default:
 		txt, err := desk.ClipboardText()
 		if err != nil {
-			return "", "portapapeles", err
+			return "", i18n.T("portapapeles"), err
 		}
-		return txt, "portapapeles", nil
+		return txt, i18n.T("portapapeles"), nil
 	}
 }
 
@@ -151,11 +153,11 @@ func tarjeta(t *tui.Term, m *qr.Matrix, texto, fuente, guardado string) []string
 	}
 	preview = strings.ReplaceAll(strings.ReplaceAll(preview, "\n", "⏎"), "\r", "")
 	items := []tui.Item{
-		{Label: "Contenido", Value: preview, Dot: tui.Teal},
-		{Label: "Longitud", Value: tui.Count(int64(len([]rune(texto))), "carácter", "caracteres"), Dot: tui.Lavender},
-		{Label: "Fuente", Value: fuente, Dot: tui.Sky},
-		{Label: "Versión QR", Value: fmt.Sprintf("%d (%d×%d)", m.Version, m.Size, m.Size), Dot: tui.Peach},
-		{Label: "Corrección", Value: "nivel " + m.Level.String(), Dot: tui.Pink},
+		{Label: i18n.T("Contenido"), Value: preview, Dot: tui.Teal},
+		{Label: i18n.T("Longitud"), Value: i18n.Nf(len([]rune(texto)), "%s carácter", "%s caracteres", tui.Int(int64(len([]rune(texto))))), Dot: tui.Lavender},
+		{Label: i18n.T("Fuente"), Value: fuente, Dot: tui.Sky},
+		{Label: i18n.T("Versión QR"), Value: fmt.Sprintf("%d (%d×%d)", m.Version, m.Size, m.Size), Dot: tui.Peach},
+		{Label: i18n.T("Corrección"), Value: i18n.F("nivel %s", m.Level.String()), Dot: tui.Pink},
 	}
 	if guardado != "" {
 		items = append(items, tui.Item{Label: "PNG", Value: guardado, Dot: tui.Sage})

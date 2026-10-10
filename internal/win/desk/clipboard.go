@@ -7,11 +7,12 @@ package desk
 // porque otro proceso puede tenerlo tomado un instante.
 
 import (
-	"errors"
 	"syscall"
 	"time"
 	"unicode/utf16"
 	"unsafe"
+
+	"github.com/agustinyarrus/clip2qr/internal/i18n"
 )
 
 var (
@@ -37,7 +38,7 @@ const (
 )
 
 // ErrClipboardEmpty se devuelve cuando no hay texto en el portapapeles.
-var ErrClipboardEmpty = errors.New("el portapapeles no tiene texto")
+var ErrClipboardEmpty error = i18n.Error("el portapapeles no tiene texto")
 
 // openClipboard intenta abrir el portapapeles con unos reintentos cortos.
 func openClipboard() error {
@@ -50,7 +51,7 @@ func openClipboard() error {
 		time.Sleep(15 * time.Millisecond)
 	}
 	if last == nil {
-		last = errors.New("no pude abrir el portapapeles")
+		last = i18n.Errorf("no pude abrir el portapapeles")
 	}
 	return last
 }
@@ -71,7 +72,7 @@ func ClipboardText() (string, error) {
 	}
 	src, _ := call(procGlobalLock, h)
 	if src == 0 {
-		return "", errors.New("no pude leer el portapapeles")
+		return "", i18n.Errorf("no pude leer el portapapeles")
 	}
 	defer call(procGlobalUnlock, h)
 
@@ -103,12 +104,12 @@ func SetClipboardText(text string) error {
 	size := uintptr(len(utf) * 2)
 	h, _ := call(procGlobalAlloc, gmemMoveable, size)
 	if h == 0 {
-		return errors.New("sin memoria para el portapapeles")
+		return i18n.Errorf("sin memoria para el portapapeles")
 	}
 	dst, _ := call(procGlobalLock, h)
 	if dst == 0 {
 		call(procGlobalFree, h)
-		return errors.New("no pude preparar el portapapeles")
+		return i18n.Errorf("no pude preparar el portapapeles")
 	}
 	// Copia explícita del búfer de Go a la memoria global, sin reinterpretar el
 	// puntero nativo como puntero de Go.
@@ -117,7 +118,7 @@ func SetClipboardText(text string) error {
 
 	if r, _ := call(procSetClipboardData, cfUnicodeText, h); r == 0 {
 		call(procGlobalFree, h)
-		return errors.New("no pude escribir el portapapeles")
+		return i18n.Errorf("no pude escribir el portapapeles")
 	}
 	return nil // tras SetClipboardData, el sistema es dueño del handle
 }

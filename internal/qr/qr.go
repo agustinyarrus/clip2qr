@@ -1,15 +1,16 @@
 package qr
 
 import (
-	"errors"
 	"fmt"
+
+	"github.com/agustinyarrus/clip2qr/internal/i18n"
 )
 
 // MaxVersion es la versión más grande del estándar.
 const MaxVersion = 40
 
 // ErrTooLong se devuelve cuando el dato no entra ni en la versión 40.
-var ErrTooLong = errors.New("el texto es demasiado largo para un código QR")
+var ErrTooLong error = i18n.Error("el texto es demasiado largo para un código QR")
 
 // Options controla la codificación.
 type Options struct {
