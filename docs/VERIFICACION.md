@@ -1,3 +1,5 @@
+<p align="right"><sub><a href="VERIFICACION.en.md">English</a> · <b>Español</b></sub></p>
+
 # Verificación
 
 La regla: clip2qr se contrasta con algo **independiente**. Un QR que solo entiende el propio codificador no prueba nada; zxing-cpp, un decodificador independiente y muy usado, sí.

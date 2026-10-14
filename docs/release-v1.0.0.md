@@ -1,3 +1,5 @@
+<p align="right"><sub><a href="release-v1.0.0.en.md">English</a> · <b>Español</b></sub></p>
+
 # clip2qr 1.0.0
 
 La primera versión de clip2qr como proyecto propio. Antes vivía en navaja, la suite de herramientas de consola para Windows; el código es el que se probó ahí, con pruebas nuevas en el borde de arriba de la norma (los límites de la versión 40, por modo y por nivel), la cabecera con la versión con su `v` y los errores que no entran en la ventana partidos en palabras. Ahora tiene su repo, su número de versión, su CI y su demo.
